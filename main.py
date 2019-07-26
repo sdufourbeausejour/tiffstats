@@ -25,7 +25,7 @@ import tiffstats
 
 image_path = "example/data/08K0001_20160503T223154_TSX_db.tif"
 shapefile_path = "example/data/AOIs_ordered.shp"
-results_dir = "example/test_solution/"
+results_dir = "example/results/"
 band_index = 1 # Rasterio starts counting at 1, not 0
 no_data_value = 0
 
