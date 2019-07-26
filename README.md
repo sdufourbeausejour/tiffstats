@@ -2,6 +2,7 @@
 
 tiffstats is a Python script for computing pixels statistics from a TIFF image
 over shapefile features
+[![DOI](https://zenodo.org/badge/199067255.svg)](https://zenodo.org/badge/latestdoi/199067255)
 
 ## Usage
 
@@ -14,8 +15,6 @@ tiffstats.compute_statistics(AOI_paths, results_dir, band_index, no_data_value) 
 
 ## Contributing
 Pull requests are welcome.
-
-Please make sure to update tests as appropriate.
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
