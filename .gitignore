@@ -1,0 +1,7 @@
+# Git ignore these files
+# python and IDEs
+*.pyc
+.idea*
+__pycache__*
+_configtest.f
+.DS_Store
