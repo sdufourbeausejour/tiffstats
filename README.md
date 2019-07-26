@@ -1,8 +1,9 @@
 # tiffstats
 
+[![DOI](https://zenodo.org/badge/199067255.svg)](https://zenodo.org/badge/latestdoi/199067255)
+
 tiffstats is a Python script for computing pixels statistics from a TIFF image
 over shapefile features
-[![DOI](https://zenodo.org/badge/199067255.svg)](https://zenodo.org/badge/latestdoi/199067255)
 
 ## Usage
 
