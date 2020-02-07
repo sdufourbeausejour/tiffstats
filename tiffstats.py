@@ -22,10 +22,10 @@ from __future__ import print_function
 import os
 import fiona
 import rasterio
-from rasterio.tools.mask import mask
+from rasterio.mask import mask
 from descartes import PolygonPatch
 from matplotlib.collections import PatchCollection
-from shapely.geometry import Polygon
+from shapely.geometry import Polygon, mapping
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -212,3 +212,42 @@ def plot_shp_over_tiff(image_path, shapefile_path, results_dir, band_index, conv
     # fig.savefig(figures_path)
     fig.savefig(figures_path[0:-4]+".png",transparent=False, dpi=300)
     plt.close()
+
+def write_new_shp(image_path, shapefile_path, results_dir):
+    """From a tiff image (path: image_path) and shapefile (path: shapefile_path),
+    create new square features centered on the original shapes"""
+
+    # Raster
+    src = rasterio.open(image_path)
+    array = src.read(1)
+    array[array == 0.0] = np.nan
+
+    # Convert features in long/lat to pixel coordinates
+    with fiona.open(shapefile_path, "r") as source:
+        sink_schema = source.schema
+        with fiona.open(
+                os.path.join(results_dir, os.path.basename(results_dir)[0]+"_RS2_square_AOIs.shp"), 'w',
+                crs=source.crs,
+                driver=source.driver,
+                schema=sink_schema,
+        ) as sink:
+            print(source.crs)
+            for j, f in enumerate(source):
+                g = f['geometry']
+                # from long / lat to y / x
+                p_coords = [src.index(x[0], x[1]) for x in g["coordinates"][0]]
+                # Get center of polygon, in y / x coordinates
+                x = [p[0] for p in p_coords]
+                y = [p[1] for p in p_coords]
+                center_x, center_y = (sum(x) / len(p_coords), sum(y) / len(p_coords))
+                # Create 22 pixels large square centered on centroid
+                half = 11
+                rectangle = [(center_x-half, center_y+half), (center_x+half, center_y+half),
+                             (center_x+half, center_y-half), (center_x-half, center_y-half), (center_x-half, center_y+half)]
+                # from y / x to long / lat
+                l_coords = [src.xy(x[0], x[1]) for x in rectangle]
+                # pixel_polygon = Polygon(l_coords)
+                g["coordinates"][0] = l_coords
+                f['geometry'] = g
+                sink.write(f)
+                # sink.write({'geometry': mapping(poly), 'properties': {'Id': j}})
