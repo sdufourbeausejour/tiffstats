@@ -30,7 +30,7 @@ band_index = 1 # Rasterio starts counting at 1, not 0
 no_data_value = 0
 
 # Write tiff AOIs
-tiffstats.tiff_AOIs_from_shp(image_path, shapefile_path, results_dir)
+tiffstats.AOIs_from_shp(image_path, shapefile_path, results_dir)
 
 # Get list of paths to tiff_AOIs
 AOI_files = natsorted(os.listdir(os.path.join(results_dir, "tiff_AOIs")))
