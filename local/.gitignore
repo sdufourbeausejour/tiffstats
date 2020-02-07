@@ -1,0 +1,4 @@
+# to keep empty folder in git
+*
+*/
+!.gitignore

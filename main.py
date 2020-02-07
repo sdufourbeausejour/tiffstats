@@ -18,19 +18,20 @@ from __future__ import print_function
 __author__ = "Sophie Dufour-Beauséjour"
 
 import os
-import numpy as np
 from natsort import natsorted
 # from this project
 import tiffstats
 
-image_path = "example/data/08K0001_20160503T223154_TSX_db.tif"
-shapefile_path = "example/data/AOIs_ordered.shp"
-results_dir = "example/results/"
+image_path = "/Volumes/Crabe/Doctorat/BaieDeception/Donnees/Imagerie/" \
+             "RS2_subAOIs/Salluit/RS2_20170412/RS2_20170412_sub_cal_spk_rat_TC.tif"
+shapefile_path = "/Volumes/Crabe/Doctorat/BaieDeception/Donnees/Imagerie/" \
+                 "VectorData/RS2_paper/S_AOIs_RS2_WGS84.shp"
+results_dir = "local/results/"
 band_index = 1 # Rasterio starts counting at 1, not 0
 no_data_value = 0
 
 # Write tiff AOIs
-tiffstats.tiff_AOIs_from_shp(image_path, shapefile_path, results_dir)
+tiffstats.AOIs_from_shp(image_path, shapefile_path, results_dir)
 
 # Get list of paths to tiff_AOIs
 AOI_files = natsorted(os.listdir(os.path.join(results_dir, "tiff_AOIs")))

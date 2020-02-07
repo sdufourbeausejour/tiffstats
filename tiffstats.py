@@ -26,6 +26,7 @@ import numpy as np
 from natsort import natsorted
 import matplotlib.pyplot as plt
 import seaborn
+from utils import line_pre_adder
 
 def compute_statistics(AOI_paths, results_dir, band_index,
         no_data_value, overwrite=0, plot=1):
