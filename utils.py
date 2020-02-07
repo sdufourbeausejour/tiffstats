@@ -10,7 +10,6 @@
 # This file is imported in main.py
 # Contents:
 # - line_pre_adder: adds line at the beginning of a file ()
-
 from __future__ import print_function
 import fileinput
 
