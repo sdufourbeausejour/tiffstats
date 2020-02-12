@@ -26,20 +26,25 @@ import utils
 
 
 band_index = [1,"HH"] # Rasterio starts counting at 1, not 0
+band_index = [2,"HV"] # Rasterio starts counting at 1, not 0
+band_index = [3,"VH"] # Rasterio starts counting at 1, not 0
+band_index = [4,"VV"] # Rasterio starts counting at 1, not 0
+band_index = [5,"HHVVRatio"] # Rasterio starts counting at 1, not 0
+band_index = [6,"HHHVRatio"] # Rasterio starts counting at 1, not 0
+band_index = [7,"VVVHRatio"] # Rasterio starts counting at 1, not 0
+
 no_data_value = 0
 exp_file_name_pattern = re.compile("RS2.*().*")
 
-for bay in ["Salluit", "DeceptionBay", "Kangiqsujuaq"]:
+for bay in ["Salluit","DeceptionBay","Kangiqsujuaq"]:
     results_dir = "/Users/sdufourbeausejour/Desktop/Doctorat/0. Analyse/" \
                   "data_analyzed/image_statistics/RS2paper/"+bay
-    shapefile_path = "/Users/sdufourbeausejour/Desktop/Doctorat/0. Analyse/" \
-                     "data_analyzed/image_statistics/RS2paper/"+bay+"/"+bay[0]+"_RS2_square_AOIs.shp"
+    shapefile_path = "/Volumes/Crabe/Doctorat/BaieDeception/Donnees/Imagerie/VectorData/RS2paper/"+bay[0]+"_AOIs_RS2_WGS84_reproj.shp"
     image_dir = "/Volumes/Crabe/Doctorat/BaieDeception/Donnees/Imagerie/RS2_subAOIs/"+bay
-
     image_folders = utils.find_matching_file_list(image_dir, exp_file_name_pattern, print_list=0)
     for i, image_folder in enumerate(image_folders):
         print("Image "+str(i+1)+ " out of "+str(len(image_folders))+"...")
-        image_path = os.path.join(image_dir, image_folder, image_folder+"_sub_cal_spk_rat_TC.tif")
+        image_path = os.path.join(image_dir, image_folder, image_folder+"_sub_cal_spk_rat_TC_reproj.tif")
 
         # Write tiff AOIs
         tiffstats.AOIs_from_shp(image_path, shapefile_path, results_dir)
@@ -55,14 +60,3 @@ for bay in ["Salluit", "DeceptionBay", "Kangiqsujuaq"]:
 # Plot shapefile over image
 # tiffstats.plot_shp_over_tiff(image_path, shapefile_path, results_dir, band_index, convert_to_dB=1)
 # tiffstats.plot_shp_over_tiff(image_path, os.path.join(results_dir, os.path.basename(results_dir)[0]+"_RS2_square_AOIs.shp"), results_dir, band_index, convert_to_dB=1)
-
-# # Modify AOI shapefiles
-# image_path = "/Volumes/Crabe/Doctorat/BaieDeception/Donnees/Imagerie/" \
-#              "RS2_subAOIs/Salluit/RS2_20151219/RS2_20151219_sub_cal_spk_rat_TC.tif"
-# shapefile_path = "/Volumes/Crabe/Doctorat/BaieDeception/Donnees/Imagerie/" \
-#              "VectorData/RS2_paper/S_AOIs_RS2_WGS84.shp"
-# results_dir = "/Users/sdufourbeausejour/Desktop/Doctorat/0. Analyse/" \
-#               "data_analyzed/image_statistics/RS2paper/Salluit"
-#
-# tiffstats.write_new_shp(image_path, shapefile_path, results_dir)
-
