@@ -128,9 +128,13 @@ def AOIs_from_shp(image_path, shapefile_path, results_dir, overwrite=0):
     """From a tiff image (path: image_path), write a tiff (in results_dir)
     for each feature in a shapefile (path: shapefile_path)."""
     preffix = os.path.basename(image_path)[0:12]+"_"
+    if "HAa" in image_path:
+        tiff_folder = "tiff_AOIs_HAa"
+    else:
+        tiff_folder = "tiff_AOIs"
 
     # Check if files already there
-    if os.path.exists(os.path.join(results_dir, "tiff_AOIs", preffix+"AOI_1.tif")):
+    if os.path.exists(os.path.join(results_dir, tiff_folder, preffix+"AOI_1.tif")):
         print("tiff_AOIs already written")
         if overwrite:
             print("overwritting...")
@@ -141,7 +145,7 @@ def AOIs_from_shp(image_path, shapefile_path, results_dir, overwrite=0):
     with fiona.open(shapefile_path, "r") as shapefile:
         # Walk through shapefile features
         for i,feature in enumerate(shapefile):
-            AOI_path = os.path.join(results_dir,"tiff_AOIs", preffix+"AOI_"+str(i+1)+".tif")
+            AOI_path = os.path.join(results_dir,tiff_folder, preffix+"AOI_"+str(i+1)+".tif")
             # Get feature geometry
             geoms = [feature["geometry"]]
             # Open image, mask with geometry
