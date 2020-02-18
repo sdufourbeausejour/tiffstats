@@ -38,9 +38,10 @@ def compute_statistics(AOI_paths, results_dir, band_index,
     list of tiff files (AOI_paths), writing to a
     single text file. NaN and no_data_value pixels are
     masked. Optional: convert linear to dB."""
+    preffix = os.path.basename(AOI_paths[0])[0:13] + band_index[1]+"_"
 
     # Check if stats already computed
-    if os.path.exists(os.path.join(results_dir, "stats", "median.txt")):
+    if os.path.exists(os.path.join(results_dir, "stats", preffix+"median.txt")):
         print("Stats already computed")
         if overwrite:
             print("Overwritting...")
@@ -51,7 +52,6 @@ def compute_statistics(AOI_paths, results_dir, band_index,
 
     n = len(AOI_paths)
     stat_names = ["mean","stddev","median","q1","q3","max","min","N"]
-    preffix = os.path.basename(AOI_paths[0])[0:13] + band_index[1]+"_"
     # Initialize arrays for each statistic, in a dictionary
     data = {}
     for stat_name in stat_names:
