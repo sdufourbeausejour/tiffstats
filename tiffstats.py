@@ -38,11 +38,15 @@ def compute_statistics(AOI_paths, results_dir, band_index,
     list of tiff files (AOI_paths), writing to a
     single text file. NaN and no_data_value pixels are
     masked. Optional: convert linear to dB."""
-    preffix = os.path.basename(AOI_paths[0])[0:13] + band_index[1]+"_"
+    for j, a in enumerate(AOI_paths):
+        if "._" in os.path.basename(a):
+            AOI_paths[j] = os.path.join(os.path.dirname(a), os.path.basename(a)[2:])
+    preffix = os.path.basename(AOI_paths[0])[0:13] +band_index[1]+"_"
 
     # Check if stats already computed
+    print(os.path.join(results_dir, "stats", preffix+"median.txt"))
     if os.path.exists(os.path.join(results_dir, "stats", preffix+"median.txt")):
-        print("Stats already computed")
+        print("Stats already computed: "+preffix+"median.txt")
         if overwrite:
             print("Overwritting...")
         else:
@@ -67,6 +71,8 @@ def compute_statistics(AOI_paths, results_dir, band_index,
     print("Computing stats for "+str(len(AOI_paths))+" AOIs...")
     for i, AOI_path in enumerate(AOI_paths):
         # Read tiff
+        if "._" in os.path.basename(AOI_path):
+            AOI_path = os.path.join(os.path.dirname(AOI_path), os.path.basename(AOI_path)[2:])
         dataset = rasterio.open(AOI_path, mode='r+')
         # Read band to an array of pixel values
         image_data = np.ma.array(dataset.read(band_index[0]))
@@ -112,7 +118,7 @@ def compute_statistics(AOI_paths, results_dir, band_index,
     # Save each statistic to text file combining all AOIs
     for key in data.keys():
         header = np.hstack(["# pixel "+key+" for list of AOI_tiffs",
-            "\n#", map(str, range(n+1))[1:]])
+            "\n#", "\t".join([str(x) for x in range(0, n+1)])])
         # Write to text file
         save_path = os.path.join(results_dir, "stats", preffix+ key+".txt")
         np.savetxt(save_path, data[key], fmt='%.8f', delimiter='\t')
@@ -128,14 +134,9 @@ def AOIs_from_shp(image_path, shapefile_path, results_dir, overwrite=0):
     """From a tiff image (path: image_path), write a tiff (in results_dir)
     for each feature in a shapefile (path: shapefile_path)."""
     preffix = os.path.basename(image_path)[0:12]+"_"
-    if "HAa" in image_path:
-        tiff_folder = "tiff_AOIs_HAa"
-    else:
-        tiff_folder = "tiff_AOIs"
-
     # Check if files already there
-    if os.path.exists(os.path.join(results_dir, tiff_folder, preffix+"AOI_1.tif")):
-        print("tiff_AOIs already written")
+    if os.path.exists(os.path.join(results_dir, preffix+"AOI_1.tif")):
+        print("tiff_AOIs already written: "+preffix+"AOI_1.tif")
         if overwrite:
             print("overwritting...")
         else:
@@ -145,7 +146,7 @@ def AOIs_from_shp(image_path, shapefile_path, results_dir, overwrite=0):
     with fiona.open(shapefile_path, "r") as shapefile:
         # Walk through shapefile features
         for i,feature in enumerate(shapefile):
-            AOI_path = os.path.join(results_dir,tiff_folder, preffix+"AOI_"+str(i+1)+".tif")
+            AOI_path = os.path.join(results_dir, preffix+"AOI_"+str(i+1)+".tif")
             # Get feature geometry
             geoms = [feature["geometry"]]
             # Open image, mask with geometry
