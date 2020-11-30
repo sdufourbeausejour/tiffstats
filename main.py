@@ -44,7 +44,7 @@ elif processing == "HAa":
     band_indices.append([3,"Alpha"]) # Rasterio starts counting at 1, not 0
 elif processing == "vsTSX":
     processing_done = "_sub_cal_spk_rat2_TC2"
-    band_indices.append([4,"VV"]) # Rasterio starts counting at 1, not 0
+    band_indices.append([4,"HH"]) # Rasterio starts counting at 1, not 0
 
 no_data_value = 0
 exp_file_name_pattern = re.compile("RS2.*().*")
